@@ -3,6 +3,7 @@ package com.vgmoose.movement2;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,8 @@ import android.os.Build;
 public class Main extends ActionBarActivity {
 
 	public static boolean debug = false;
+	float zoomifier = (float) 1;
+	GamePanel drawView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +35,7 @@ public class Main extends ActionBarActivity {
 		// Give these image paths to Player 
 		Player.setImages(this, images);
 		
-		GamePanel drawView = new GamePanel(this);
+		drawView = new GamePanel(this);
 		
 		RelativeLayout layout2 = (RelativeLayout)findViewById(R.id.fullscreen_content);
 		layout2.addView(drawView);
@@ -42,18 +45,31 @@ public class Main extends ActionBarActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
+		menu.add(0, 0, 0, "Debug Mode Toggle");
+		menu.add(0, 1, 0, "Zoom in");
+		menu.add(0, 2, 0, "Zoom out");
+
 		return true;
 	}
 
+	@SuppressLint("NewApi")
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
+		if (id == 0) {
+			debug = !debug;
+			drawView.invalidate();
+		} else if (id == 1){
+			zoomifier += .5;
+			drawView.setScaleX(zoomifier);
+			drawView.setScaleY(zoomifier);
+		} else if (id == 2){
+			zoomifier -= .5;
+			drawView.setScaleX(zoomifier);
+			drawView.setScaleY(zoomifier);
 		}
 		return super.onOptionsItemSelected(item);
 	}
