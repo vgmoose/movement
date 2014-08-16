@@ -120,7 +120,13 @@ public class Player
 		// advance the frame
 		frame = (frame+1)%15;
 		
-		Log.v("movements", "" + dx + " " + dy);
+		dx = (dx < 0) ? Math.floor(dx/4) : Math.ceil(dx/4);
+		dy = (dy < 0) ? Math.floor(dy/4) : Math.ceil(dy/4);
+		
+		dx *= 4;
+		dy *= 4;
+		
+//		Log.v("movements", "" + dx + " " + dy);
 		
 		if (Math.abs(dx) > Math.abs(dy))
 		{

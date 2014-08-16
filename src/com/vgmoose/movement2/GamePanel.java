@@ -218,8 +218,8 @@ public class GamePanel extends View implements View.OnTouchListener
 
 
 			// get the coordinates of the click
-			int x = (int) (e.getX()/4) * 4;
-			int y = (int) (e.getY()/4) * 4;
+			int x = Math.round(e.getX()/4) * 4;
+			int y = Math.round(e.getY()/4) * 4;
 
 			// for each player, does the cursor lie in their coordinates?
 			for (Player p : players)
@@ -280,37 +280,37 @@ public class GamePanel extends View implements View.OnTouchListener
 
 	}
 
-	public void move(int a)
-	{
-		switch (a)
-		{
-		case 1:
-			activePlayer.move(-1, -1, this);
-			break;
-		case 2:
-			activePlayer.move(0, -1, this);
-			break;
-		case 3:
-			activePlayer.move(1, -1, this);
-			break;
-		case 4:
-			activePlayer.move(1, 0, this);
-			break;
-		case 5:
-			activePlayer.move(1, 1, this);
-			break;
-		case 6:
-			activePlayer.move(0, 1, this);
-			break;
-		case 7:
-			activePlayer.move(-1, 1, this);
-			break;
-		case 0:
-		case 8:
-			activePlayer.move(-1, 0, this);
-			break;
-		}
-	}
+//	public void move(int a)
+//	{
+//		switch (a)
+//		{
+//		case 1:
+//			activePlayer.move(-1, -1, this);
+//			break;
+//		case 2:
+//			activePlayer.move(0, -1, this);
+//			break;
+//		case 3:
+//			activePlayer.move(1, -1, this);
+//			break;
+//		case 4:
+//			activePlayer.move(1, 0, this);
+//			break;
+//		case 5:
+//			activePlayer.move(1, 1, this);
+//			break;
+//		case 6:
+//			activePlayer.move(0, 1, this);
+//			break;
+//		case 7:
+//			activePlayer.move(-1, 1, this);
+//			break;
+//		case 0:
+//		case 8:
+//			activePlayer.move(-1, 0, this);
+//			break;
+//		}
+//	}
 
 	//	public void keyPressed(KeyEvent e) 
 	//	{
