@@ -90,10 +90,11 @@ public class GamePanel extends View implements View.OnTouchListener
 		super.onDraw(g);		
 
 		updateScreenSizeIfNecessary();
+		
+		p.setColor(Color.rgb(250, 250, 178));
 
 		if (!Main.debug)
 		{			
-			p.setColor(Color.rgb(250, 250, 178));
 			g.drawRect(0, 0, getWidth(), getHeight(), p);
 
 			p.setColor(Color.BLACK);
@@ -148,9 +149,12 @@ public class GamePanel extends View implements View.OnTouchListener
 
 			//			Log.v("aaa", ""+getWidth() + " " + getHeight() + " " + magicScale);
 
-			// create a default player
-			activePlayer = new Player(players.size(), (int)(getWidth()/2/4)*4, (int)(getHeight()/2/4)*4);
-			players.add(activePlayer);
+			// create some default players
+			for (int x=0; x<7; x++)
+			{
+				activePlayer = new Player(players.size(), (int)(getWidth()/2/4)*4-32*(x-3), (int)(getHeight()/2/4)*4-32*(x-3));
+				players.add(activePlayer);
+			}
 		}
 
 	}
@@ -229,22 +233,22 @@ public class GamePanel extends View implements View.OnTouchListener
 			}
 			// if no one was found at the current click, draw the crosshair and set the destination
 
-			if (!Main.debug)
-			{
+//			if (!Main.debug)
+//			{
 				destY = y;
 				destX = x;
-			}
-			else
-			{
-				// Create a new player and give the mouse coordinates
-				// as well as how many players currently exist (size of players arraylist)
-				Player p = new Player(players.size(), x-16, y-16);
-
-				// add this player to the arraylist
-				players.add(p);
-				// make this player active
-				activePlayer = p;
-			}
+//			}
+//			else
+//			{
+//				// Create a new player and give the mouse coordinates
+//				// as well as how many players currently exist (size of players arraylist)
+//				Player p = new Player(players.size(), x-16, y-16);
+//
+//				// add this player to the arraylist
+//				players.add(p);
+//				// make this player active
+//				activePlayer = p;
+//			}
 			//
 			//			// redraw the canvas
 			invalidate();
@@ -342,22 +346,22 @@ public class GamePanel extends View implements View.OnTouchListener
 		{
 
 			int tx = destX - 16, ty = destY - 16, lx = activePlayer.x, ly = activePlayer.y;
-			
+
 			//difference vector
 			int zx = tx - lx;
 			int zy = ty - ly;
-			
+
 			//how much we need to shorten the distance vector
 			double a = 4/Math.sqrt(zx*zx + zy*zy);
 
 			//how much to move link
 			double dx = a*zx;
 			double dy = a*zy;
-			
+
 			if (Double.isNaN(dx)) dx = 0;
 			if (Double.isNaN(dy)) dy = 0;
 
-			activePlayer.move(dx, dy);
+			activePlayer.move(this, dx, dy);
 		}
 
 		// repaint the canvas

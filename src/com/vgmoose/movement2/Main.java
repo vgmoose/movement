@@ -24,7 +24,9 @@ public class Main extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		String[] images = {"link_sprites.png","link_red.png","blue_links.png"};
+		// all spritesheet names go here
+		String[] images = {"fat_boy.png", "fat_girl.png", "santa.png", 
+				"santa_girl.png", "reindeer_boy.png", "evil_boy.png", "evil_girl.png"};
 		
 		// Give these image paths to Player 
 		Player.setImages(this, images);
