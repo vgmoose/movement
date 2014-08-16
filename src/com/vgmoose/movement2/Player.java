@@ -16,6 +16,7 @@ public class Player
 	private int color, direction, frame;
 	public int x,y; // this is public information
 	public static Bitmap bg;
+	public static Bitmap crosshair;
 	private int speed = 4;
 	
 	// frame is the column of the image (step)
@@ -66,6 +67,7 @@ public class Player
 		// create the background
 		try {
 			bg =  BitmapFactory.decodeStream(ctx.getAssets().open("grass.png"));
+			crosshair = BitmapFactory.decodeStream(ctx.getAssets().open("crosshair.png"));
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -110,6 +112,13 @@ public class Player
 		
 		// update the image since we've moved
 		updateImage();
+	}
+
+	public void move(double dx, double dy) 
+	{
+		x += dx;
+		y += dy;
+		
 	}
 
 }

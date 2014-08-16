@@ -1,9 +1,8 @@
 package com.vgmoose.movement2;
 
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.os.Build;
 
-public class Main extends ActionBarActivity {
+public class Main extends Activity {
 
 	public static boolean debug = false;
 	float zoomifier = (float) 1;
@@ -25,11 +24,6 @@ public class Main extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		if (savedInstanceState == null) {
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
-		}
-		
 		String[] images = {"link_sprites.png","link_red.png","blue_links.png"};
 		
 		// Give these image paths to Player 

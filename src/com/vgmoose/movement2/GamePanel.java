@@ -11,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
@@ -29,8 +30,12 @@ public class GamePanel extends View implements View.OnTouchListener
 	Paint p;
 	Context ctx;
 	float magicScale;
+	Typeface face;
 
+
+	int bfontOff = 300;
 	int joyx, joyy;
+	int destY, destX;
 
 	float hudIniX, hudIniY, hudCurX, hudCurY;
 
@@ -57,6 +62,9 @@ public class GamePanel extends View implements View.OnTouchListener
 		p.setColor(Color.BLACK);
 
 		setOnTouchListener(this);
+
+
+		face = Typeface.createFromAsset(ctx.getAssets(), "LCD_Solid.ttf");
 
 		// this is a kind of weird thing, it's needed to not have a
 		// strange delay when you hold down a key
@@ -87,21 +95,21 @@ public class GamePanel extends View implements View.OnTouchListener
 		{			
 			p.setColor(Color.rgb(250, 250, 178));
 			g.drawRect(0, 0, getWidth(), getHeight(), p);
-			
+
 			p.setColor(Color.BLACK);
 
 			// draw the background
-						g.drawBitmap(Player.bg, getWidth()/2-250, getHeight()/2-250, p);
+			g.drawBitmap(Player.bg, getWidth()/2-250, getHeight()/2-250, p);
 			//			Paint p = new Paint();
 			//			
 			//			// draw rectangle in the top left
 
 
 			// draw text strings 
-//			g.drawText("Click to create a new player at the mouse position", 3, 13, p);
-//			g.drawText("Click an existing player to mark them active", 3, 27, p);
-//			g.drawText("Use the arrow keys to move the active player", 3, 41, p);
-//			g.drawText("Right click to toggle debug information", 3, 55, p);
+			//			g.drawText("Click to create a new player at the mouse position", 3, 13, p);
+			//			g.drawText("Click an existing player to mark them active", 3, 27, p);
+			//			g.drawText("Use the arrow keys to move the active player", 3, 41, p);
+			//			g.drawText("Right click to toggle debug information", 3, 55, p);
 		}
 
 		// draw each player in the arraylist
@@ -109,13 +117,21 @@ public class GamePanel extends View implements View.OnTouchListener
 		for (Player p : players)
 			p.draw(g, this.p);
 
-		drawControls(g);
+		if (destY > 0 && destX > 0)
+			g.drawBitmap(Player.crosshair, destX-16, destY-16, p);
+
+		//		drawControls(g);
 		drawText(g);
 	}
-	
+
 	public void drawText(Canvas g)
 	{
-		
+		p.setColor(Color.argb(140, 0, 102, 230));
+		g.drawRect(0, (float) (.7*getHeight()), getWidth(), getHeight(), p);
+		p.setColor(Color.WHITE);
+		p.setTextSize(20);
+		p.setTypeface(face);
+		g.drawText("This is a bitmap font test.", bfontOff, (float) (.72*getHeight()), p);
 	}
 
 	private void updateScreenSizeIfNecessary() 
@@ -127,60 +143,60 @@ public class GamePanel extends View implements View.OnTouchListener
 			magicScale = thisMagicScale;
 			setScaleY(magicScale);
 			setScaleX(magicScale);
-			
+
 			((Main)ctx).zoomifier = magicScale;
-			
-//			Log.v("aaa", ""+getWidth() + " " + getHeight() + " " + magicScale);
-			
+
+			//			Log.v("aaa", ""+getWidth() + " " + getHeight() + " " + magicScale);
+
 			// create a default player
 			activePlayer = new Player(players.size(), (int)(getWidth()/2/4)*4, (int)(getHeight()/2/4)*4);
 			players.add(activePlayer);
 		}
-		
-	}
-
-	public void drawControls(Canvas g)
-	{
-
-		int distance = 2*(int)Math.sqrt((hudCurX-hudIniX)*(hudCurX-hudIniX) + (hudCurY-hudIniY)*(hudCurY-hudIniY));
-
-		int bx = (int) hudCurX;
-		int by = (int) hudCurY;
-
-		if (distance < 40)
-			return;
-
-		if (distance>100)
-			distance = 100;		
-
-		//		if (distance>100)
-		//		{
-		//			double theta = Math.atan2(hudCurY-hudCurY, hudIniX-hudIniY);
-		//			bx = (int) (hudIniX + 50 * Math.cos(theta));
-		//			by = (int) (hudIniY + 50 * Math.sin(theta));
-		//
-		//		}
-
-
-		//		((Graphics2D) g).setStroke(new BasicStroke(3));
-
-		p.setColor(Color.argb(100,130,150,50));
-		//		g.drawCircle(hudIniX, hudIniY, distance, p); // outer
-		g.drawCircle(hudIniX, hudIniY, 25, p); // initial
-		//		g.setColor(Color.black);
-		g.drawCircle(bx, by, 10, p); // head
-
-		//		((Graphics2D) g).setStroke(new BasicStroke(7));
-
-		g.drawLine(bx, by, hudIniX, hudIniY, p); // line
-		//		g.setColor(Color.darkGray);
-
-		joyx = (int) ((bx - hudIniX) / 50.0);
-		joyy = (int) ((by - hudIniY) / 50.0);
-
-		//		Log.v("aaa", ""+joyx +  " " + joyy);
 
 	}
+
+	//	public void drawControls(Canvas g)
+	//	{
+	//
+	//		int distance = 2*(int)Math.sqrt((hudCurX-hudIniX)*(hudCurX-hudIniX) + (hudCurY-hudIniY)*(hudCurY-hudIniY));
+	//
+	//		int bx = (int) hudCurX;
+	//		int by = (int) hudCurY;
+	//
+	//		if (distance < 40)
+	//			return;
+	//
+	//		if (distance>100)
+	//			distance = 100;		
+	//
+	//		//		if (distance>100)
+	//		//		{
+	//		//			double theta = Math.atan2(hudCurY-hudCurY, hudIniX-hudIniY);
+	//		//			bx = (int) (hudIniX + 50 * Math.cos(theta));
+	//		//			by = (int) (hudIniY + 50 * Math.sin(theta));
+	//		//
+	//		//		}
+	//
+	//
+	//		//		((Graphics2D) g).setStroke(new BasicStroke(3));
+	//
+	//		p.setColor(Color.argb(100,130,150,50));
+	//		//		g.drawCircle(hudIniX, hudIniY, distance, p); // outer
+	//		g.drawCircle(hudIniX, hudIniY, 25, p); // initial
+	//		//		g.setColor(Color.black);
+	//		g.drawCircle(bx, by, 10, p); // head
+	//
+	//		//		((Graphics2D) g).setStroke(new BasicStroke(7));
+	//
+	//		g.drawLine(bx, by, hudIniX, hudIniY, p); // line
+	//		//		g.setColor(Color.darkGray);
+	//
+	//		joyx = (int) ((bx - hudIniX) / 50.0);
+	//		joyy = (int) ((by - hudIniY) / 50.0);
+	//
+	//		//		Log.v("aaa", ""+joyx +  " " + joyy);
+	//
+	//	}
 
 	public boolean onTouch(View v, MotionEvent e) 
 	{
@@ -191,64 +207,70 @@ public class GamePanel extends View implements View.OnTouchListener
 		//			return;
 		//		}
 
-		if (e.getAction() == MotionEvent.ACTION_UP)
+		if (e.getAction() == MotionEvent.ACTION_DOWN)
 		{
 
 			mousedown = false;
 
-			if (placementmode)
+
+			// get the coordinates of the click
+			int x = (int) (e.getX()/4) * 4;
+			int y = (int) (e.getY()/4) * 4;
+
+			// for each player, does the cursor lie in their coordinates?
+			for (Player p : players)
 			{
-
-				// get the coordinates of the click
-				int x = (int) (e.getX()/4) * 4;
-				int y = (int) (e.getY()/4) * 4;
-
-				// for each player, does the cursor lie in their coordinates?
-				for (Player p : players)
+				// if so, make them the active player and return
+				if (p.x < x+16 && p.x+32 > x-16 && y-16 < p.y+32 && y+16 > p.y)
 				{
-					// if so, make them the active player and return
-					if (p.x < x+16 && p.x+32 > x-16 && y-16 < p.y+32 && y+16 > p.y)
-					{
-						activePlayer = p;
-						return true;
-					}
+					activePlayer = p;
+					return true;
 				}
-				// if no one was found at the current click, make a new one
+			}
+			// if no one was found at the current click, draw the crosshair and set the destination
 
+			if (!Main.debug)
+			{
+				destY = y;
+				destX = x;
+			}
+			else
+			{
 				// Create a new player and give the mouse coordinates
 				// as well as how many players currently exist (size of players arraylist)
 				Player p = new Player(players.size(), x-16, y-16);
 
 				// add this player to the arraylist
 				players.add(p);
-
-				// redraw the canvas
-				invalidate();
-
 				// make this player active
 				activePlayer = p;
 			}
-		}
-		else if (e.getAction() == MotionEvent.ACTION_DOWN)
-		{
-			hudIniX = e.getX();
-			hudIniY = e.getY();
-			hudCurX = hudIniX;
-			hudCurY = hudIniY;
-			placementmode = true;
-			mousedown = true;
-		}
-		else if (e.getAction() == MotionEvent.ACTION_MOVE)
-		{			
-			int distance = 2*(int)Math.sqrt((e.getX()-hudIniX)*(e.getX()-hudIniX) + ( e.getY()-hudIniY)*(e.getY()-hudIniY));
+			//
+			//			// redraw the canvas
+			invalidate();
+			//
 
-			if (distance > 40)
-			{
-				hudCurX =  e.getX();
-				hudCurY = e.getY();
-				placementmode = false;
-			}
 		}
+		//		else if (e.getAction() == MotionEvent.ACTION_DOWN)
+		//		{
+		//			hudIniX = e.getX();
+		//			hudIniY = e.getY();
+		//			hudCurX = hudIniX;
+		//			hudCurY = hudIniY;
+		//			placementmode = true;
+		//			mousedown = true;
+		//		}
+		//		else if (e.getAction() == MotionEvent.ACTION_MOVE)
+		//		{			
+		//			int distance = 2*(int)Math.sqrt((e.getX()-hudIniX)*(e.getX()-hudIniX) + ( e.getY()-hudIniY)*(e.getY()-hudIniY));
+		//
+		//			if (distance > 40)
+		//			{
+		//				hudCurX =  e.getX();
+		//				hudCurY = e.getY();
+		//				placementmode = false;
+		//			}
+		//		}
 
 		return true;
 
@@ -305,20 +327,46 @@ public class GamePanel extends View implements View.OnTouchListener
 
 	public void updateTimer()
 	{
-		// move if a key is being held
-		if (mousedown)
-			if (activePlayer != null)
-				if (hudCurX != hudIniX && hudCurY != hudIniY)
-					move(getDirectionValue());
+		//		// move if a key is being held
+		//		if (mousedown)
+		//			if (activePlayer != null)
+		//				if (hudCurX != hudIniX && hudCurY != hudIniY)
+		//					move(getDirectionValue());
+
+		bfontOff -= 1;
+
+		if (bfontOff < -300)
+			bfontOff = 600;
+
+		if (destX > 0 && destY > 0)
+		{
+
+			int tx = destX - 16, ty = destY - 16, lx = activePlayer.x, ly = activePlayer.y;
+			
+			//difference vector
+			int zx = tx - lx;
+			int zy = ty - ly;
+			
+			//how much we need to shorten the distance vector
+			double a = 4/Math.sqrt(zx*zx + zy*zy);
+
+			//how much to move link
+			double dx = a*zx;
+			double dy = a*zy;
+			
+			if (Double.isNaN(dx)) dx = 0;
+			if (Double.isNaN(dy)) dy = 0;
+
+			activePlayer.move(dx, dy);
+		}
 
 		// repaint the canvas
-
-		if (mousedown)
-		{
-			((Activity) ctx).runOnUiThread(new Runnable(){ public void run() {
-				invalidate();
-			}});
-		}
+		//		if (mousedown)
+		//		{
+		((Activity) ctx).runOnUiThread(new Runnable(){ public void run() {
+			invalidate();
+		}});
+		//		}
 	}
 
 	public void keyReleased(KeyEvent arg0) 
