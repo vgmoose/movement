@@ -98,6 +98,7 @@ public class GamePanel extends View implements View.OnTouchListener
 			g.drawRect(0, 0, getWidth(), getHeight(), p);
 
 			p.setColor(Color.BLACK);
+			
 
 			// draw the background
 			g.drawBitmap(Player.bg, getWidth()/2-250, getHeight()/2-250, p);
@@ -105,6 +106,7 @@ public class GamePanel extends View implements View.OnTouchListener
 			//			
 			//			// draw rectangle in the top left
 
+//			g.drawRect(100, 100, getWidth()-100, getHeight()-100, p);
 
 			// draw text strings 
 			//			g.drawText("Click to create a new player at the mouse position", 3, 13, p);
@@ -128,11 +130,11 @@ public class GamePanel extends View implements View.OnTouchListener
 	public void drawText(Canvas g)
 	{
 		p.setColor(Color.argb(140, 0, 102, 230));
-		g.drawRect(0, (float) (.7*getHeight()), getWidth(), getHeight(), p);
+		g.drawRect(0, (float) (.65*getHeight()), getWidth(), getHeight(), p);
 		p.setColor(Color.WHITE);
 		p.setTextSize(20);
 		p.setTypeface(face);
-		g.drawText("This is a bitmap font test.", bfontOff, (float) (.72*getHeight()), p);
+		g.drawText("This is a bitmap font test.", bfontOff, (float) (.67*getHeight()), p);
 	}
 
 	private void updateScreenSizeIfNecessary() 

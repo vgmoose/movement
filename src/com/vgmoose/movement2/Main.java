@@ -16,7 +16,7 @@ import android.os.Build;
 public class Main extends Activity {
 
 	public static boolean debug = false;
-	float zoomifier = (float) 1;
+	static float zoomifier = (float) 1;
 	GamePanel drawView;
 	
 	@Override
