@@ -1,5 +1,8 @@
+package com.vgmoose.movement2;
 
-public class Present<Bitmap> {
+import android.graphics.Bitmap;
+
+public class Present {
 
 	int weight;
 	int value;

@@ -19,6 +19,7 @@ public class Player
 	public static Bitmap bg;
 	public static Bitmap crosshair;
 	private int speed = 4;
+	private Sack sack;
 
 	// frame is the column of the image (step)
 	// direction is 0=down, 1=up, 2=left, 3=right
@@ -151,6 +152,16 @@ public class Player
 
 		updateImage();
 
+	}
+	
+	void setSack(Sack s)
+	{
+		this.sack = s;
+	}
+	
+	Sack getSack()
+	{
+		return this.sack;
 	}
 
 }

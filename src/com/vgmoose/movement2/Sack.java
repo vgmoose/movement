@@ -1,3 +1,4 @@
+package com.vgmoose.movement2;
 import java.util.ArrayList;
 
 
@@ -7,11 +8,13 @@ public class Sack {
 	ArrayList<Present> presents;
 	int currentWeight;
 	
-	public Sack(int maxWeight, ArrayList<Present> presents, int currentWeight) 
+	public Sack(int maxWeight, int currentWeight) 
 	{
 		this.maxWeight = maxWeight;
-		this.presents = presents;
+		this.presents = new ArrayList<Present>();
 		this.currentWeight = currentWeight;
+		// TODO: Weight isn't the only way a sack can fill, they can also fill based on quantity
+		// 		 perhaps introduce a boolean to determine if the Sack is weight-based or quantity-based
 	}
 	
 	public void setMaxWeight(int weight)
@@ -41,6 +44,7 @@ public class Sack {
 	
 	public void addPresent(Present present)
 	{
+		// TODO: check if it's full before adding... If full return false, else true
 		presents.add(present);
 	}
 	
@@ -51,4 +55,6 @@ public class Sack {
 		
 		return presents;
 	}
+	
+	// TODO: clear() method is missing...
 }

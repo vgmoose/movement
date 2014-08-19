@@ -1,3 +1,4 @@
+package com.vgmoose.movement2;
 
 public class Enemy {
 
@@ -7,13 +8,13 @@ public class Enemy {
 	int xCord;
 	int yCord;
 	
-	public Enemy(int speed, int row, String type, int xCord, int yCord)
+	public Enemy(int speed, int row, String type)
 	{
 		this.speed = speed;
 		this.row = row;
 		this.type = type;
-		this.xCord = xCord;
-		this.yCord = yCord;
+//		this.xCord = xCord;
+//		this.yCord = yCord;
 	}
 	
 	public void setSpeed(int speed)
@@ -46,24 +47,26 @@ public class Enemy {
 		return type;
 	}
 	
-	public void setXCord(int x)
+	public void setX(int x)
 	{
 		this.xCord = x;
 	}
 	
-	public int getXCord()
+	public int getX()
 	{
 		return xCord;
 	}
 	
-	public void setYCord(int y)
+	public void setY(int y)
 	{
 		this.yCord = y;
 	}
 	
-	public int getYCord()
+	public int getY()
 	{
 		return yCord;
 	}
+	
+	// TODO: create method that will be passed a Player object, and will detract x elements from their sack
 	
 }
