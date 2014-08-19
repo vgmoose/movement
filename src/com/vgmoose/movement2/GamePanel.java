@@ -106,7 +106,7 @@ public class GamePanel extends View implements View.OnTouchListener
 			//			
 			//			// draw rectangle in the top left
 
-//			g.drawRect(100, 100, getWidth()-100, getHeight()-100, p);
+//			g.drawRect(getWidth()/(magicScale*2), getHeight()/(magicScale*2), getWidth()-getWidth()/(magicScale*2), getHeight()-getHeight()/(magicScale*2), p);
 
 			// draw text strings 
 			//			g.drawText("Click to create a new player at the mouse position", 3, 13, p);
@@ -143,9 +143,13 @@ public class GamePanel extends View implements View.OnTouchListener
 
 		if (thisMagicScale != magicScale)
 		{
+			Log.v("he magic", ""+magicScale + " " + + getHeight() + " " + getWidth());
+
 			magicScale = thisMagicScale;
 			setScaleY(magicScale);
 			setScaleX(magicScale);
+			
+			Log.v("he magic", ""+magicScale + " " + + getHeight() + " " + getWidth());
 
 			((Main)ctx).zoomifier = magicScale;
 
