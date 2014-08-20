@@ -35,7 +35,6 @@ public class GamePanel extends View implements View.OnTouchListener
 
 	int bfontOff = 300;
 	int joyx, joyy;
-	int destY, destX;
 
 	float hudIniX, hudIniY, hudCurX, hudCurY;
 
@@ -90,7 +89,7 @@ public class GamePanel extends View implements View.OnTouchListener
 		super.onDraw(g);		
 
 		updateScreenSizeIfNecessary();
-		
+
 		p.setColor(Color.rgb(250, 250, 178));
 
 		if (!Main.debug)
@@ -98,7 +97,7 @@ public class GamePanel extends View implements View.OnTouchListener
 			g.drawRect(0, 0, getWidth(), getHeight(), p);
 
 			p.setColor(Color.BLACK);
-			
+
 
 			// draw the background
 			g.drawBitmap(Player.bg, getWidth()/2-250, getHeight()/2-250, p);
@@ -106,7 +105,7 @@ public class GamePanel extends View implements View.OnTouchListener
 			//			
 			//			// draw rectangle in the top left
 
-//			g.drawRect(getWidth()/(magicScale*2), getHeight()/(magicScale*2), getWidth()-getWidth()/(magicScale*2), getHeight()-getHeight()/(magicScale*2), p);
+			//			g.drawRect(getWidth()/(magicScale*2), getHeight()/(magicScale*2), getWidth()-getWidth()/(magicScale*2), getHeight()-getHeight()/(magicScale*2), p);
 
 			// draw text strings 
 			//			g.drawText("Click to create a new player at the mouse position", 3, 13, p);
@@ -118,10 +117,12 @@ public class GamePanel extends View implements View.OnTouchListener
 		// draw each player in the arraylist
 		// (they are passed the Graphics object, and then tell it how to draw them)
 		for (Player p : players)
+		{
 			p.draw(g, this.p);
 
-		if (destY > 0 && destX > 0)
-			g.drawBitmap(Player.crosshair, destX-16, destY-16, p);
+			if (p.isMoving())
+				g.drawBitmap(Player.crosshair, p.destX-16, p.destY-16, this.p);
+		}
 
 		//		drawControls(g);
 		drawText(g);
@@ -148,7 +149,7 @@ public class GamePanel extends View implements View.OnTouchListener
 			magicScale = thisMagicScale;
 			setScaleY(magicScale);
 			setScaleX(magicScale);
-			
+
 			Log.v("he magic", ""+magicScale + " " + + getHeight() + " " + getWidth());
 
 			((Main)ctx).zoomifier = magicScale;
@@ -239,22 +240,21 @@ public class GamePanel extends View implements View.OnTouchListener
 			}
 			// if no one was found at the current click, draw the crosshair and set the destination
 
-//			if (!Main.debug)
-//			{
-				destY = y;
-				destX = x;
-//			}
-//			else
-//			{
-//				// Create a new player and give the mouse coordinates
-//				// as well as how many players currently exist (size of players arraylist)
-//				Player p = new Player(players.size(), x-16, y-16);
-//
-//				// add this player to the arraylist
-//				players.add(p);
-//				// make this player active
-//				activePlayer = p;
-//			}
+			//			if (!Main.debug)
+			//			{
+			activePlayer.setDest(x, y);
+			//			}
+			//			else
+			//			{
+			//				// Create a new player and give the mouse coordinates
+			//				// as well as how many players currently exist (size of players arraylist)
+			//				Player p = new Player(players.size(), x-16, y-16);
+			//
+			//				// add this player to the arraylist
+			//				players.add(p);
+			//				// make this player active
+			//				activePlayer = p;
+			//			}
 			//
 			//			// redraw the canvas
 			invalidate();
@@ -286,37 +286,37 @@ public class GamePanel extends View implements View.OnTouchListener
 
 	}
 
-//	public void move(int a)
-//	{
-//		switch (a)
-//		{
-//		case 1:
-//			activePlayer.move(-1, -1, this);
-//			break;
-//		case 2:
-//			activePlayer.move(0, -1, this);
-//			break;
-//		case 3:
-//			activePlayer.move(1, -1, this);
-//			break;
-//		case 4:
-//			activePlayer.move(1, 0, this);
-//			break;
-//		case 5:
-//			activePlayer.move(1, 1, this);
-//			break;
-//		case 6:
-//			activePlayer.move(0, 1, this);
-//			break;
-//		case 7:
-//			activePlayer.move(-1, 1, this);
-//			break;
-//		case 0:
-//		case 8:
-//			activePlayer.move(-1, 0, this);
-//			break;
-//		}
-//	}
+	//	public void move(int a)
+	//	{
+	//		switch (a)
+	//		{
+	//		case 1:
+	//			activePlayer.move(-1, -1, this);
+	//			break;
+	//		case 2:
+	//			activePlayer.move(0, -1, this);
+	//			break;
+	//		case 3:
+	//			activePlayer.move(1, -1, this);
+	//			break;
+	//		case 4:
+	//			activePlayer.move(1, 0, this);
+	//			break;
+	//		case 5:
+	//			activePlayer.move(1, 1, this);
+	//			break;
+	//		case 6:
+	//			activePlayer.move(0, 1, this);
+	//			break;
+	//		case 7:
+	//			activePlayer.move(-1, 1, this);
+	//			break;
+	//		case 0:
+	//		case 8:
+	//			activePlayer.move(-1, 0, this);
+	//			break;
+	//		}
+	//	}
 
 	//	public void keyPressed(KeyEvent e) 
 	//	{
@@ -348,27 +348,9 @@ public class GamePanel extends View implements View.OnTouchListener
 		if (bfontOff < -300)
 			bfontOff = 600;
 
-		if (destX > 0 && destY > 0)
-		{
-
-			int tx = destX - 16, ty = destY - 16, lx = activePlayer.x, ly = activePlayer.y;
-
-			//difference vector
-			int zx = tx - lx;
-			int zy = ty - ly;
-
-			//how much we need to shorten the distance vector
-			double a = 4/Math.sqrt(zx*zx + zy*zy);
-
-			//how much to move link
-			double dx = a*zx;
-			double dy = a*zy;
-
-			if (Double.isNaN(dx)) dx = 0;
-			if (Double.isNaN(dy)) dy = 0;
-
-			activePlayer.move(this, dx, dy);
-		}
+		for (Player p : players)
+			if (p.isMoving())
+				p.moveToDest(this);
 
 		// repaint the canvas
 		//		if (mousedown)
@@ -432,11 +414,11 @@ public class GamePanel extends View implements View.OnTouchListener
 		return s;
 	}
 
-	public boolean checkCollisions(int x, int y) 
+	public boolean checkCollisions(Player currentPlayer, int x, int y) 
 	{
 		// this runs a simple rectangle boundary check on all the players and the given coordinates
 		for (Player p : players)
-			if (p != activePlayer)
+			if (p != currentPlayer)
 				if (p.x < x+32 && p.x+32 > x && y < p.y+32 && y+32 > p.y) 
 					return false;
 

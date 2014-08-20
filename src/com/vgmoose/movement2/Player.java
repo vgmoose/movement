@@ -19,7 +19,9 @@ public class Player
 	public static Bitmap bg;
 	public static Bitmap crosshair;
 	private int speed = 4;
+	int destX, destY;
 	private Sack sack;
+	private boolean moving = false;
 
 	// frame is the column of the image (step)
 	// direction is 0=down, 1=up, 2=left, 3=right
@@ -56,9 +58,9 @@ public class Player
 			g.drawRect(x, y, 32+x, 32+y, p);
 			//			g.drawString(""+this.x+","+this.y, x-5, y-6);
 		}
-		
+
 		// draw the sprite on the given Graphics object
-				g.drawBitmap(sprite,this.x,this.y, p);
+		g.drawBitmap(sprite,this.x,this.y, p);
 	}
 
 	static void setImages(Context ctx, String[] im) 
@@ -106,29 +108,38 @@ public class Player
 			direction = 1;
 
 		// move in the direction of the code
-		if (gp.checkCollisions(this.x + x, this.y))
+		if (gp.checkCollisions(this, this.x + x, this.y))
 			this.x += x;
 
-		if (gp.checkCollisions(this.x, this.y + y))
+		if (gp.checkCollisions(this, this.x, this.y + y))
 			this.y += y;
 
 		// update the image since we've moved
 		updateImage();
 	}
-
-	public void move(GamePanel gp, double dx, double dy) 
+	
+	public void move(GamePanel gp, double dx, double dy)
 	{
+
 		// advance the frame
 		frame = (frame+1)%15;
-		
+
 		dx = (dx < 0) ? Math.floor(dx/4) : Math.ceil(dx/4);
 		dy = (dy < 0) ? Math.floor(dy/4) : Math.ceil(dy/4);
-		
+
 		dx *= 4;
 		dy *= 4;
 		
-//		Log.v("movements", "" + dx + " " + dy);
-		
+		// we have arrived, or we stopped moving (hit a wall)
+		if (dx == 0 && dy == 0)
+		{
+			moving = false;
+			updateImage();
+			return;
+		}
+
+		//		Log.v("movements", "" + dx + " " + dy);
+
 		if (Math.abs(dx) > Math.abs(dy))
 		{
 			if (dx > 0)
@@ -144,24 +155,58 @@ public class Player
 				direction = 3;
 		}
 
-		if (gp.checkCollisions((int) (this.x + dx), this.y))
+		if (gp.checkCollisions(this, (int) (this.x + dx), this.y))
 			x += dx;
 
-		if (gp.checkCollisions(this.x, (int) (this.y + dy)))
+		if (gp.checkCollisions(this, this.x, (int) (this.y + dy)))
 			y += dy;
 
-		updateImage();
 
+		updateImage();
 	}
-	
+
+	public void moveToDest(GamePanel gp) 
+	{
+
+		int tx = destX - 16, ty = destY - 16, lx = x, ly = y;
+
+		//difference vector
+		int zx = tx - lx;
+		int zy = ty - ly;
+
+		//how much we need to shorten the distance vector
+		double a = 4/Math.sqrt(zx*zx + zy*zy);
+
+		//how much to move link
+		double dx = a*zx;
+		double dy = a*zy;
+
+		if (Double.isNaN(dx)) dx = 0;
+		if (Double.isNaN(dy)) dy = 0;
+
+		move(gp, dx, dy);
+	}
+
 	void setSack(Sack s)
 	{
 		this.sack = s;
 	}
-	
+
 	Sack getSack()
 	{
 		return this.sack;
+	}
+
+	void setDest(int destX, int destY)
+	{
+		this.destX = destX;
+		this.destY = destY;
+		moving = true;
+	}
+
+	public boolean isMoving() 
+	{
+		return moving;
 	}
 
 }
