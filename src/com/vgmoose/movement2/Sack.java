@@ -1,18 +1,24 @@
 package com.vgmoose.movement2;
 import java.util.ArrayList;
 
+import android.util.Log;
+
 
 public class Sack {
 	
 	int maxWeight;
 	ArrayList<Present> presents;
+	ArrayList<Present> presentsDropped;
 	int currentWeight;
+	boolean weightBased;
 	
-	public Sack(int maxWeight, int currentWeight) 
+	public Sack(int maxWeight, int currentWeight, boolean weightBased) 
 	{
 		this.maxWeight = maxWeight;
 		this.presents = new ArrayList<Present>();
+		this.presentsDropped = new ArrayList<Present>();
 		this.currentWeight = currentWeight;
+		this.weightBased = weightBased;
 		// TODO: Weight isn't the only way a sack can fill, they can also fill based on quantity
 		// 		 perhaps introduce a boolean to determine if the Sack is weight-based or quantity-based
 	}
@@ -42,19 +48,46 @@ public class Sack {
 		return currentWeight;
 	}
 	
+	public void setWeightBased(boolean weight)
+	{
+		weightBased = weight;
+	}
+	
+	public boolean getWeightBased()
+	{
+		return weightBased;
+	}
+	
 	public void addPresent(Present present)
 	{
-		// TODO: check if it's full before adding... If full return false, else true
-		presents.add(present);
-	}
-	
-	public ArrayList<Present> losePresents(ArrayList<Present> presents, int numberLost)
-	{
-		for(int i=0; i<numberLost; i++)
-			presents.remove((int)(Math.random()*presents.size()));
+		if(weightBased && currentWeight + present.getWeight() > maxWeight)
+			return;
+		else if(!weightBased && presents.size() <= maxWeight)
+			return;
 		
-		return presents;
+		presents.add(present);
+		currentWeight += present.getWeight();
 	}
 	
-	// TODO: clear() method is missing...
+	public ArrayList<Present> losePresents(int numberLost)
+	{
+		int dropped;
+		//clear the old dropped presents
+		presentsDropped.clear();
+		for(int i=0; i<numberLost; i++)
+		{
+			dropped = (int)(Math.random()*presents.size());
+			presentsDropped.add(presents.get(dropped));
+			presents.remove(dropped);
+		}
+		
+		return presentsDropped;
+	}
+	
+	public void clearSack()
+	{
+		while(!presents.isEmpty())
+			presents.remove(0);
+	}
+	
 }
