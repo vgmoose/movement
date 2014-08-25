@@ -17,7 +17,7 @@ public class testSack extends ActivityInstrumentationTestCase2<Main> {
 	protected void setUp() throws Exception {
 		super.setUp();
 		
-		sack = new Sack(0, 0, true);
+		sack = new Sack(0, true);
 	}
 	
 	public void testAdd()
@@ -48,12 +48,25 @@ public class testSack extends ActivityInstrumentationTestCase2<Main> {
 		sack.addPresent(p3);
 		
 		sack.addPresent(p4);
-		assertEquals(5,sack.getCurrentWeight());
+		assertEquals(5, sack.getCurrentWeight());
 	}
 	
 	public void testFillQuantity()
 	{
-		// TODO: fill me out, look at testAdd() to see how to make it look
+		Present p1 = new Present(0, 0, null, null);
+		Present p2 = new Present(0, 0, null, null);
+		Present p3 = new Present(0, 0, null, null);
+		Present p4 = new Present(0, 0, null, null);
+
+		sack.setWeightBased(false);
+		sack.setMaxWeight(3);
+		sack.addPresent(p1);
+		sack.addPresent(p2);
+		sack.addPresent(p3);
+		//p4 shouldn't be added since max weight is 3
+		sack.addPresent(p4);
+
+		assertEquals(3, sack.getPresents().size());
 	}
 	
 	public void testRemove()
@@ -86,6 +99,10 @@ public class testSack extends ActivityInstrumentationTestCase2<Main> {
 	
 	public void testWeight()
 	{
-		// TODO: fill me out, look at testAdd() to see how to make it look
+		Present p = new Present(3, 0, null, null);
+		sack.setMaxWeight(5);
+		sack.addPresent(p);
+
+		assertEquals(3, sack.getCurrentWeight());
 	}
 }

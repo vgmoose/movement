@@ -7,11 +7,10 @@ public class Sack {
 	int currentWeight;
 	boolean weightBased;
 	
-	public Sack(int maxWeight, int currentWeight, boolean weightBased) 
+	public Sack(int maxWeight, boolean weightBased)
 	{
 		this.maxWeight = maxWeight;
 		this.presents = new PresentList();
-		this.currentWeight = currentWeight;
 		this.weightBased = weightBased;
 		// TODO: Weight isn't the only way a sack can fill, they can also fill based on quantity
 		// 		 perhaps introduce a boolean to determine if the Sack is weight-based or quantity-based
@@ -56,7 +55,7 @@ public class Sack {
 	{
 		if(weightBased && currentWeight + present.getWeight() > maxWeight)
 			return;
-		else if(!weightBased && presents.size() <= maxWeight)
+		else if(!weightBased && presents.size() >= maxWeight)
 			return;
 		
 		presents.add(present);
