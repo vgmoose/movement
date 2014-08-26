@@ -32,7 +32,6 @@ public class GamePanel extends View implements View.OnTouchListener
 	float magicScale;
 	Typeface face;
 
-
 	int bfontOff = 300;
 	int joyx, joyy;
 
@@ -105,7 +104,7 @@ public class GamePanel extends View implements View.OnTouchListener
 			//			
 			//			// draw rectangle in the top left
 
-			g.drawRect(getWidth()/(magicScale*2), getHeight()/(magicScale*2), getWidth()-getWidth()/(magicScale*2), getHeight()-getHeight()/(magicScale*2), p);
+//			g.drawRect(getWidth()/(magicScale*2), getHeight()/(magicScale*2), getWidth()-getWidth()/(magicScale*2), getHeight()-getHeight()/(magicScale*2), p);
 
 			// draw text strings 
 			//			g.drawText("Click to create a new player at the mouse position", 3, 13, p);

@@ -18,6 +18,7 @@ public class Main extends Activity {
 	public static boolean debug = false;
 	static float zoomifier = (float) 1;
 	GamePanel drawView;
+	Sync syncMaster;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,9 @@ public class Main extends Activity {
 		
 		RelativeLayout layout2 = (RelativeLayout)findViewById(R.id.fullscreen_content);
 		layout2.addView(drawView);
+		
+		// setup sync object
+		syncMaster = new Sync();
 	}
 
 	@Override
@@ -44,6 +48,7 @@ public class Main extends Activity {
 		menu.add(0, 0, 0, "Debug Mode Toggle");
 		menu.add(0, 1, 0, "Zoom in");
 		menu.add(0, 2, 0, "Zoom out");
+		menu.add(0, 3, 0, "Connect");
 
 		return true;
 	}
@@ -66,6 +71,8 @@ public class Main extends Activity {
 			zoomifier -= .5;
 			drawView.setScaleX(zoomifier);
 			drawView.setScaleY(zoomifier);
+		} else if (id == 3){
+			syncMaster.connect(Main.this);
 		}
 		return super.onOptionsItemSelected(item);
 	}

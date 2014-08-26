@@ -7,7 +7,7 @@ public class Enemy {
 	String type;
 	int xCord;
 	int yCord;
-	
+		
 	public Enemy(int speed, int row, String type)
 	{
 		this.speed = speed;

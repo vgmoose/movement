@@ -8,6 +8,7 @@ server.listen(3001);
 // handle incoming connections from clients
 io.sockets.on('connection', function(socket) {
               // once a client has connected, we expect to get a ping from them saying what room they want to join
+              console.log("got a thing");
               socket.on('room', function(room) {
                         socket.join(room);
                         });
