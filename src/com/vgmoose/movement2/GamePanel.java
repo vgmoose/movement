@@ -10,25 +10,21 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.Typeface;
 import android.util.Log;
-import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 
 
-@SuppressLint("NewApi")
 public class GamePanel extends View implements View.OnTouchListener
 {
 	// An array list is an object wrapper for an array, allows dynamic resizing
 	private ArrayList<Player> players = new ArrayList<Player>();
 	private Player activePlayer;
-	private int keyCode = -1;
 	private Timer t;
 	Paint p;
-	Context ctx;
+	Main ctx;
 	float magicScale;
 	Typeface face;
 
@@ -39,7 +35,7 @@ public class GamePanel extends View implements View.OnTouchListener
 
 	boolean mousedown, placementmode;
 
-	public GamePanel(Context ctx)
+	public GamePanel(Main ctx)
 	{
 		super(ctx);
 		this.ctx = ctx;
@@ -70,7 +66,7 @@ public class GamePanel extends View implements View.OnTouchListener
 				updateTimer();
 			}
 		}, 0, 40);
-
+		
 
 		//		Display display = ((Activity) ctx).getWindowManager().getDefaultDisplay();
 		//		Point size = new Point();
@@ -78,6 +74,7 @@ public class GamePanel extends View implements View.OnTouchListener
 		//		int width = size.x;
 		//		int height = size.y;
 	}
+	
 
 	// this method is called when someone calls repaint()
 	public void onDraw(Canvas g)
@@ -128,38 +125,44 @@ public class GamePanel extends View implements View.OnTouchListener
 
 	public void drawText(Canvas g)
 	{
-		p.setColor(Color.argb(140, 0, 102, 230));
-		g.drawRect(0, (float) (.65*getHeight()), getWidth(), getHeight(), p);
-		p.setColor(Color.WHITE);
-		p.setTextSize(20);
-		p.setTypeface(face);
-		g.drawText("This is a bitmap font test.", bfontOff, (float) (.67*getHeight()), p);
+//		p.setColor(Color.argb(140, 0, 102, 230));
+//		g.drawRect(0, (float) (.65*getHeight()), getWidth(), getHeight(), p);
+//		p.setColor(Color.WHITE);
+//		p.setTextSize(20);
+//		p.setTypeface(face);
+//		g.drawText("This is a bitmap font test.", bfontOff, (float) (.67*getHeight()), p);
 	}
 
 	private void updateScreenSizeIfNecessary() 
 	{
+		
 		float thisMagicScale = (float) (Math.min(getWidth(),  getHeight()) / 360.0);
 
 		if (thisMagicScale != magicScale)
 		{
-			Log.v("he magic", ""+magicScale + " " + + getHeight() + " " + getWidth());
 
 			magicScale = thisMagicScale;
 			setScaleY(magicScale);
 			setScaleX(magicScale);
 
-			Log.v("he magic", ""+magicScale + " " + + getHeight() + " " + getWidth());
 
-			((Main)ctx).zoomifier = magicScale;
+			Main.zoomifier = magicScale;
 
 			//			Log.v("aaa", ""+getWidth() + " " + getHeight() + " " + magicScale);
 
 			// create some default players
-			for (int x=0; x<7; x++)
-			{
-				activePlayer = new Player(players.size(), (int)(getWidth()/2/4)*4-32*(x-3), (int)(getHeight()/2/4)*4-32*(x-3));
-				players.add(activePlayer);
-			}
+//			for (int x=0; x<7; x++)
+//			{
+//				activePlayer = new Player(players.size(), (int)(getWidth()/2/4)*4-32*(x-3), (int)(getHeight()/2/4)*4-32*(x-3));
+//				players.add(activePlayer);
+//			}
+			
+			int randX = (int) (getWidth()/2 + (int)(Math.random()*7 - 3)*32);
+			int randY = (int) (getHeight()/2 + (int)(Math.random()*7 - 3)*32);
+			
+			// create one random default player
+			activePlayer = new Player((int)(Math.random()*7), (int)(randX/4)*4, (int)(randY/4)*4);
+			players.add(activePlayer);
 		}
 
 	}
@@ -232,7 +235,7 @@ public class GamePanel extends View implements View.OnTouchListener
 				// if so, make them the active player and return
 				if (p.x < x+16 && p.x+32 > x-16 && y-16 < p.y+32 && y+16 > p.y)
 				{
-					activePlayer = p;
+//					activePlayer = p;
 					return true;
 				}
 			}
@@ -241,6 +244,7 @@ public class GamePanel extends View implements View.OnTouchListener
 			//			if (!Main.debug)
 			//			{
 			activePlayer.setDest(x, y);
+			activePlayer.sendDestinationEvent(ctx.syncMaster);
 			//			}
 			//			else
 			//			{
@@ -279,7 +283,6 @@ public class GamePanel extends View implements View.OnTouchListener
 		//				placementmode = false;
 		//			}
 		//		}
-
 		return true;
 
 	}
@@ -362,7 +365,7 @@ public class GamePanel extends View implements View.OnTouchListener
 	public void keyReleased(KeyEvent arg0) 
 	{
 		// set keycode to -1 to indicate no key is being held down
-		keyCode = -1;
+//		keyCode = -1;
 	}
 
 	public int getDirectionValue()
@@ -411,6 +414,17 @@ public class GamePanel extends View implements View.OnTouchListener
 
 		return s;
 	}
+	
+	public void dropPlayers()
+	{
+		players = new ArrayList<Player>();
+		players.add(activePlayer);
+	}
+	
+	public Player getActivePlayer()
+	{
+		return activePlayer;
+	}
 
 	public boolean checkCollisions(Player currentPlayer, int x, int y) 
 	{
@@ -421,6 +435,40 @@ public class GamePanel extends View implements View.OnTouchListener
 					return false;
 
 		return true;
+	}
+	
+	public void addPlayer(int id, int kind)
+	{
+		Player p = new Player(kind, 0, 0);
+		p.setId(id, null);
+		players.add(p);
+	}
+	
+	public void setDestById(int id, int destX, int destY)
+	{
+		for (Player p : players)
+		{
+			if (p.id == id)
+			{
+				p.destX = destX;
+				p.destY = destY;
+			}
+		}
+	}
+
+
+	public void moveById(int id, int x, int y) 
+	{
+		for (Player p : players)
+		{
+			if (p.id == id)
+			{
+				p.x = x;
+				p.y = y;
+				return;
+			}
+		}
+		
 	}
 
 

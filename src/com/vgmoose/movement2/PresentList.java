@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class PresentList extends ArrayList<Present>{
 	
-	ArrayList<Present> presentList;
+//	ArrayList<Present> presentList;
 	
 	public PresentList()
 	{

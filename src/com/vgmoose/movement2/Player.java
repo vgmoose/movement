@@ -2,6 +2,9 @@ package com.vgmoose.movement2;
 import java.io.File;
 import java.io.IOException;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -22,16 +25,17 @@ public class Player
 	int destX, destY;
 	private Sack sack;
 	private boolean moving = false;
+	int id;
 
 	// frame is the column of the image (step)
 	// direction is 0=down, 1=up, 2=left, 3=right
 
 	private Bitmap sprite;
 
-	public Player(int size, int x, int y) 
+	public Player(int type, int x, int y) 
 	{
 		// the size mod 3 will determine what color this link is
-		this.color = size % 7;
+		this.color = type;
 
 		// set the coordinates too
 		this.x = x;
@@ -117,7 +121,7 @@ public class Player
 		// update the image since we've moved
 		updateImage();
 	}
-	
+
 	public void move(GamePanel gp, double dx, double dy)
 	{
 
@@ -129,11 +133,12 @@ public class Player
 
 		dx *= 4;
 		dy *= 4;
-		
+
 		// we have arrived, or we stopped moving (hit a wall)
 		if (dx == 0 && dy == 0)
 		{
 			moving = false;
+			sendMovementEvent(gp.ctx.syncMaster);
 			updateImage();
 			return;
 		}
@@ -204,9 +209,67 @@ public class Player
 		moving = true;
 	}
 
+	public int getType()
+	{
+		return color;
+	}
+
 	public boolean isMoving() 
 	{
 		return moving;
+	}
+
+	public void setId(int value, GamePanel drawView) {
+		id = value;
+
+		if (this == drawView.getActivePlayer() && drawView != null)
+			sendInitialEvent(drawView.ctx.syncMaster);
+	}
+
+	private void sendGenericEvent(Sync syncer, int value)
+	{
+		if (!syncer.connected)
+			return;
+		
+		JSONObject payload = new JSONObject();
+
+		try {
+
+			if (value == 2)
+			{
+				payload.put("dest_x", destX);
+				payload.put("dest_y", destY);
+			}
+
+			if (value == 1)
+			{
+				payload.put("kind", color);
+			}
+
+			payload.put("x", x);
+			payload.put("y", y);
+		} catch (JSONException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		syncer.socket.emit("get_move", payload);
+	}
+	
+	void sendMovementEvent(Sync syncer)
+	{
+		sendGenericEvent(syncer, 3);
+	}
+
+	void sendDestinationEvent(Sync syncer)
+	{
+		sendGenericEvent(syncer, 2);
+	}
+
+	void sendInitialEvent(Sync syncer)
+	{
+		sendGenericEvent(syncer, 1);
 	}
 
 }

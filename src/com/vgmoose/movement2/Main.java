@@ -3,20 +3,17 @@ package com.vgmoose.movement2;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.RelativeLayout;
-import android.os.Build;
 
 public class Main extends Activity {
 
 	public static boolean debug = false;
 	static float zoomifier = (float) 1;
 	GamePanel drawView;
+	int viewWidth, viewHeight;
 	Sync syncMaster;
 	
 	@Override
@@ -41,18 +38,19 @@ public class Main extends Activity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onPrepareOptionsMenu(Menu menu) {
 
+		menu.clear();
+		
 		// Inflate the menu; this adds items to the action bar if it is present.
 		menu.add(0, 0, 0, "Debug Mode Toggle");
 		menu.add(0, 1, 0, "Zoom in");
 		menu.add(0, 2, 0, "Zoom out");
-		menu.add(0, 3, 0, "Connect");
+		menu.add(0, 3, 0, syncMaster.connected? "Disconnect" : "Connect");
 
 		return true;
 	}
 
-	@SuppressLint("NewApi")
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
@@ -77,7 +75,7 @@ public class Main extends Activity {
 			}
 			catch (Exception e)
 			{
-				Popup.alert(Main.this, "super fail", e.getMessage());
+				Popup.alert(Main.this, "Connection Issue", "Unknown issue: " + e.getMessage());
 			}
 		}
 		return super.onOptionsItemSelected(item);
