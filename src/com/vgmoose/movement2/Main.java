@@ -72,7 +72,14 @@ public class Main extends Activity {
 			drawView.setScaleX(zoomifier);
 			drawView.setScaleY(zoomifier);
 		} else if (id == 3){
-			syncMaster.connect(Main.this);
+			try
+			{
+				syncMaster.connect(Main.this);
+			}
+			catch (Exception e)
+			{
+				Popup.alert(Main.this, "super fail", e.getMessage());
+			}
 		}
 		return super.onOptionsItemSelected(item);
 	}

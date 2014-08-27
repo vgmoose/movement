@@ -61,7 +61,6 @@ public class GamePanel extends View implements View.OnTouchListener
 
 		setOnTouchListener(this);
 
-
 		face = Typeface.createFromAsset(ctx.getAssets(), "LCD_Solid.ttf");
 
 		// this is a kind of weird thing, it's needed to not have a
