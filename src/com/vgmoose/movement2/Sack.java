@@ -1,23 +1,16 @@
 package com.vgmoose.movement2;
-import java.util.ArrayList;
-
-import android.util.Log;
-
 
 public class Sack {
 	
 	int maxWeight;
-	ArrayList<Present> presents;
-	ArrayList<Present> presentsDropped;
+	PresentList presents;
 	int currentWeight;
 	boolean weightBased;
 	
-	public Sack(int maxWeight, int currentWeight, boolean weightBased) 
+	public Sack(int maxWeight, boolean weightBased)
 	{
 		this.maxWeight = maxWeight;
-		this.presents = new ArrayList<Present>();
-		this.presentsDropped = new ArrayList<Present>();
-		this.currentWeight = currentWeight;
+		this.presents = new PresentList();
 		this.weightBased = weightBased;
 		// TODO: Weight isn't the only way a sack can fill, they can also fill based on quantity
 		// 		 perhaps introduce a boolean to determine if the Sack is weight-based or quantity-based
@@ -33,7 +26,7 @@ public class Sack {
 		return maxWeight;
 	}
 		
-	public ArrayList<Present> getPresents()
+	public PresentList getPresents()
 	{
 		return presents;
 	}
@@ -62,18 +55,18 @@ public class Sack {
 	{
 		if(weightBased && currentWeight + present.getWeight() > maxWeight)
 			return;
-		else if(!weightBased && presents.size() <= maxWeight)
+		else if(!weightBased && presents.size() >= maxWeight)
 			return;
 		
 		presents.add(present);
 		currentWeight += present.getWeight();
 	}
 	
-	public ArrayList<Present> losePresents(int numberLost)
+	public PresentList losePresents(int numberLost)
 	{
 		int dropped;
 		//clear the old dropped presents
-		presentsDropped.clear();
+		PresentList presentsDropped = new PresentList();
 		for(int i=0; i<numberLost; i++)
 		{
 			dropped = (int)(Math.random()*presents.size());
