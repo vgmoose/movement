@@ -13,8 +13,6 @@ public class Enemy {
 		this.speed = speed;
 		this.row = row;
 		this.type = type;
-//		this.xCord = xCord;
-//		this.yCord = yCord;
 	}
 	
 	public void setSpeed(int speed)
@@ -66,7 +64,11 @@ public class Enemy {
 	{
 		return yCord;
 	}
-	
-	// TODO: create method that will be passed a Player object, and will detract x elements from their sack
+
+	public void collide(Player p)
+	{
+		int numberLost = (int)(Math.random()*p.getSack().getPresents().size())+1;
+		p.getSack().losePresents(numberLost);
+	}
 	
 }
