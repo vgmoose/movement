@@ -1,5 +1,7 @@
 package com.vgmoose.movement2;
 
+import java.net.URISyntaxException;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
@@ -14,7 +16,7 @@ public class Main extends Activity {
 	static float zoomifier = (float) 1;
 	GamePanel drawView;
 	int viewWidth, viewHeight;
-	Sync syncMaster;
+	static Sync syncMaster;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +36,12 @@ public class Main extends Activity {
 		layout2.addView(drawView);
 		
 		// setup sync object
-		syncMaster = new Sync();
+		try {
+			syncMaster = new Sync(Main.this);
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override

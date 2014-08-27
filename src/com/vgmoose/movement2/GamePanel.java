@@ -114,10 +114,10 @@ public class GamePanel extends View implements View.OnTouchListener
 		for (Player p : players)
 		{
 			p.draw(g, this.p);
-
-			if (p.isMoving())
-				g.drawBitmap(Player.crosshair, p.destX-16, p.destY-16, this.p);
 		}
+		
+		if (activePlayer.isMoving())
+			g.drawBitmap(Player.crosshair, activePlayer.destX-16, activePlayer.destY-16, this.p);
 
 		//		drawControls(g);
 		drawText(g);
@@ -440,18 +440,30 @@ public class GamePanel extends View implements View.OnTouchListener
 	public void addPlayer(int id, int kind)
 	{
 		Player p = new Player(kind, 0, 0);
-		p.setId(id, null);
+		p.setId(id);
+		Popup.toast(this.ctx, "New Player Connected");
 		players.add(p);
+	}
+	
+	public boolean doesIdExist(int id)
+	{
+		for (Player p : players)
+		{
+			if (p.id == id)
+				return true;
+		}
+		
+		return false;
 	}
 	
 	public void setDestById(int id, int destX, int destY)
 	{
 		for (Player p : players)
 		{
-			if (p.id == id)
+			if (p.id == id && p != activePlayer)
 			{
-				p.destX = destX;
-				p.destY = destY;
+				p.setDest(destX,  destY);
+				return;
 			}
 		}
 	}
@@ -461,11 +473,24 @@ public class GamePanel extends View implements View.OnTouchListener
 	{
 		for (Player p : players)
 		{
-			if (p.id == id)
+			if (p.id == id && p != activePlayer)
 			{
 				p.x = x;
 				p.y = y;
 				return;
+			}
+		}
+		
+	}
+
+
+	public void removePlayerById(Integer id) {
+		for (Player p : players)
+		{
+			if (p.id == id)
+			{
+				players.remove(p);
+				Popup.toast(this.ctx, "Player disconnected.");
 			}
 		}
 		

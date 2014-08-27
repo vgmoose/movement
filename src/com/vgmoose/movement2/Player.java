@@ -25,7 +25,7 @@ public class Player
 	int destX, destY;
 	private Sack sack;
 	private boolean moving = false;
-	int id;
+	int id = -1;
 
 	// frame is the column of the image (step)
 	// direction is 0=down, 1=up, 2=left, 3=right
@@ -138,7 +138,8 @@ public class Player
 		if (dx == 0 && dy == 0)
 		{
 			moving = false;
-			sendMovementEvent(gp.ctx.syncMaster);
+			if (gp.getActivePlayer() == this)
+				sendMovementEvent(gp.ctx.syncMaster);
 			updateImage();
 			return;
 		}
@@ -219,11 +220,8 @@ public class Player
 		return moving;
 	}
 
-	public void setId(int value, GamePanel drawView) {
+	public void setId(int value) {
 		id = value;
-
-		if (this == drawView.getActivePlayer() && drawView != null)
-			sendInitialEvent(drawView.ctx.syncMaster);
 	}
 
 	private void sendGenericEvent(Sync syncer, int value)
@@ -241,10 +239,10 @@ public class Player
 				payload.put("dest_y", destY);
 			}
 
-			if (value == 1)
-			{
+//			if (value == 1)
+//			{
 				payload.put("kind", color);
-			}
+//			}
 
 			payload.put("x", x);
 			payload.put("y", y);
