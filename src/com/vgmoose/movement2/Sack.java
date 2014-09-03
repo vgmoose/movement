@@ -51,15 +51,18 @@ public class Sack {
 		return weightBased;
 	}
 	
-	public void addPresent(Present present)
+	public boolean addPresent(Present present)
 	{
 		if(weightBased && currentWeight + present.getWeight() > maxWeight)
-			return;
+			return false;
 		else if(!weightBased && presents.size() >= maxWeight)
-			return;
-		
-		presents.add(present);
-		currentWeight += present.getWeight();
+			return false;
+		else
+		{
+			presents.add(present);
+			currentWeight += present.getWeight();
+			return true;
+		}
 	}
 	
 	public PresentList losePresents(int numberLost)
