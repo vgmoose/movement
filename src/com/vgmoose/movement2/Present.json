@@ -1,0 +1,9 @@
+{
+    "presents":[{"value": 1000, "weight": 7, "type": "d"},
+                {"value": 600, "weight": 6, "type": "p"},
+                {"value": 350, "weight": 5, "type": "s"},
+                {"value": 250, "weight": 4, "type": "n"},
+                {"value": 100, "weight": 3, "type": "g"},
+                {"value": 50, "weight": 2, "type": "s"},
+                {"value": 20, "weight": 1, "type": "c"}]
+}
